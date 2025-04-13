@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>IPTV-org Monitor Only</title>
+  <title>Remote Controlled M3U8 Player</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -42,32 +42,20 @@
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
-    const playlistURL = "https://iptv-org.github.io/iptv/languages/spa.m3u";
-    let channels = [];
-    let currentIndex = 0;
+    const channels = [
+      { name: "CCN Live", url: "https://televiva.net:19360/ccnlive/ccnlive.m3u8" },
+      { name: "ABTV", url: "https://televiva.net:19360/abtv/abtv.m3u8" },
+      { name: "TV Push", url: "https://televiva.net:19360/tv-push/tv-push.m3u8" }
+    ];
+
     const video = document.getElementById('video');
     const channelName = document.getElementById('channel-name');
     let hls;
 
-    async function loadPlaylist() {
-      try {
-        const response = await fetch(playlistURL);
-        const m3uText = await response.text();
-        const lines = m3uText.split('\n');
-        for (let i = 0; i < lines.length; i++) {
-          if (lines[i].startsWith('#EXTINF')) {
-            const name = lines[i].split(',')[1];
-            const url = lines[i + 1];
-            if (url && url.startsWith('http')) {
-              channels.push({ name, url });
-            }
-          }
-        }
-        loadChannel(currentIndex);
-      } catch (err) {
-        channelName.textContent = 'Error loading playlist';
-        console.error(err);
-      }
+    function getChannelIndexFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      const canal = parseInt(params.get('canal'));
+      return isNaN(canal) ? 0 : Math.min(Math.max(canal, 0), channels.length - 1);
     }
 
     function loadChannel(index) {
@@ -87,7 +75,8 @@
       }
     }
 
-    loadPlaylist();
+    const currentChannelIndex = getChannelIndexFromURL();
+    loadChannel(currentChannelIndex);
   </script>
 
 </body>
