@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>IPTV-org Playlist Player</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #111;
+      color: white;
+      align-items: center;
+    }
+    #video-container {
+      width: 100%;
+      max-width: 640px;
+      height: 40vh;
+      background: black;
+    }
+    video {
+      width: 100%;
+      height: 100%;
+    }
+    #channel-name {
+      margin: 10px 10px;
+      font-size: 1.2em;
+      text-align: center;
+    }
+    .controls {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      padding: 20px;
+    }
+    button {
+      background-color: #333;
+      color: white;
+      padding: 10px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="video-container">
+    <video id="video" controls autoplay></video>
+  </div>
+
+  <div id="channel-name">Cargando canal...</div>
+
+  <div class="controls">
+    <button onclick="prevChannel()">⬆ UP</button>
+    <button onclick="togglePlay()">⏯ Start/Stop</button>
+    <button onclick="nextChannel()">⬇ DOWN</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    const playlistURL = "https://iptv-org.github.io/iptv/languages/spa.m3u";
+    let channels = [];
+    let currentIndex = 0;
+    const video = document.getElementById('video');
+    const channelName = document.getElementById('channel-name');
+    let hls;
+
+    async function loadPlaylist() {
+      try {
+        const response = await fetch(playlistURL);
+        const m3uText = await response.text();
+        const lines = m3uText.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+          if (lines[i].startsWith('#EXTINF')) {
+            const name = lines[i].split(',')[1];
+            const url = lines[i + 1];
+            if (url && url.startsWith('http')) {
+              channels.push({ name, url });
+            }
+          }
+        }
+        loadChannel(currentIndex);
+      } catch (err) {
+        channelName.textContent = 'Error loading playlist';
+        console.error(err);
+      }
+    }
+
+    function loadChannel(index) {
+      const channel = channels[index];
+      channelName.textContent = channel.name;
+
+      if (hls) {
+        hls.destroy();
+      }
+
+      if (Hls.isSupported()) {
+        hls = new Hls();
+        hls.loadSource(channel.url);
+        hls.attachMedia(video);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = channel.url;
+      }
+    }
+
+    function nextChannel() {
+      currentIndex = (currentIndex + 1) % channels.length;
+      loadChannel(currentIndex);
+    }
+
+    function prevChannel() {
+      currentIndex = (currentIndex - 1 + channels.length) % channels.length;
+      loadChannel(currentIndex);
+    }
+
+    function togglePlay() {
+      if (video.paused) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+
+    loadPlaylist();
+  </script>
+
+</body>
+</html>
