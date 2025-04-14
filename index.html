@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Streaming</title>
+  <title>Televiva Live</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
@@ -84,12 +84,12 @@
       .then(response => response.json())
       .then(data => {
         const player = document.getElementById('player');
-        const source = document.createElement('source');
-        source.src = data.streamURL;
-        source.type = "application/x-mpegURL";
-        player.appendChild(source);
+        player.src = data.streamURL;
         player.load();
         player.play();
+      })
+      .catch(error => {
+        console.error("Error cargando el JSON:", error);
       });
   </script>
 
