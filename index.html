@@ -2,27 +2,28 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Reproductor M3U8</title>
+  <title>ABTV Live</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://vjs.zencdn.net/8.9.0/video-js.css" rel="stylesheet" />
   <style>
     body {
       margin: 0;
+      padding: 0;
       background-color: black;
     }
-    .video-js {
-      width: 100vw;
-      height: 56.25vw;
+    video {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: black;
     }
   </style>
 </head>
 <body>
 
-  <video id="my-video" class="video-js vjs-default-skin" controls autoplay muted>
-    <source src="https://televiva.net:19360/abtv/abtv.m3u8" type="application/x-mpegURL" />
-    Tu navegador no soporta streaming M3U8.
+  <video controls autoplay>
+    <source src="https://televiva.net:19360/abtv/abtv.m3u8" type="application/x-mpegURL">
+    Tu navegador no soporta streaming en vivo.
   </video>
 
-  <script src="https://vjs.zencdn.net/8.9.0/video.min.js"></script>
 </body>
 </html>
