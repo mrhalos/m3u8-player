@@ -56,8 +56,7 @@
   <h1>Streaming</h1>
 
   <div id="video-container">
-    <video id="player" controls autoplay>
-      <source src="https://televiva.net:19360/abtv/abtv.m3u8" type="application/x-mpegURL">
+    <video id="player" controls autoplay muted>
       Tu navegador no soporta streaming M3U8.
     </video>
   </div>
@@ -80,6 +79,18 @@
         player.msRequestFullscreen();
       }
     }
+
+    fetch('stream.json')
+      .then(response => response.json())
+      .then(data => {
+        const player = document.getElementById('player');
+        const source = document.createElement('source');
+        source.src = data.streamURL;
+        source.type = "application/x-mpegURL";
+        player.appendChild(source);
+        player.load();
+        player.play();
+      });
   </script>
 
 </body>
