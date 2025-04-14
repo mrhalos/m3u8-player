@@ -2,24 +2,18 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Live Stream</title>
+  <title>ABTV Player</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       margin: 0;
       background-color: black;
-      font-family: sans-serif;
-      color: white;
-      text-align: center;
     }
     video {
       width: 100vw;
-      height: 56.25vw;
+      height: 56.25vw; /* 16:9 aspect ratio */
       background: black;
-    }
-    h2 {
-      margin-top: 10px;
-      font-size: 20px;
+      display: block;
     }
   </style>
 </head>
@@ -29,8 +23,6 @@
     <source src="https://televiva.net:19360/abtv/abtv.m3u8" type="application/x-mpegURL">
     Tu navegador no soporta streaming en vivo.
   </video>
-
-  <h2>ABTV en Vivo</h2>
 
 </body>
 </html>
